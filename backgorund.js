@@ -1,6 +1,5 @@
-chrome.runtime.onInstalled.addListener(() => {
+const updateIcon = () => {
    chrome.action.disable()
-
    chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
       const exampleRule = {
          conditions: [
@@ -13,20 +12,9 @@ chrome.runtime.onInstalled.addListener(() => {
       const rules = [exampleRule]
       chrome.declarativeContent.onPageChanged.addRules(rules)
    })
+}
 
-   chrome.storage.sync.set(
-      {
-         badgeText: 'ON',
-      },
-      () => {
-         chrome.action.setBadgeText({
-            text: 'ON',
-         })
-      }
-   )
-})
-
-chrome.action.onClicked.addListener(() => {
+const updateBaseText = () => {
    chrome.storage.sync.get(['badgeText'], (res) => {
       const newBadgeText = res.badgeText === 'ON' ? 'OFF' : 'ON'
       chrome.storage.sync.set(
@@ -40,4 +28,28 @@ chrome.action.onClicked.addListener(() => {
          }
       )
    })
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+   updateIcon()
+
+   chrome.storage.sync.set(
+      {
+         badgeText: 'ON',
+      },
+      () => {
+         chrome.action.setBadgeText({
+            text: 'ON',
+         })
+      }
+   )
+})
+
+chrome.runtime.onStartup.addListener(() => {
+   updateIcon()
+   updateBaseText()
+})
+
+chrome.action.onClicked.addListener(() => {
+   updateBaseText()
 })
