@@ -1,7 +1,7 @@
 const updateIcon = () => {
    chrome.action.disable()
    chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-      const exampleRule = {
+      const checkYouTube = {
          conditions: [
             new chrome.declarativeContent.PageStateMatcher({
                pageUrl: { hostSuffix: '.youtube.com' },
@@ -9,7 +9,7 @@ const updateIcon = () => {
          ],
          actions: [new chrome.declarativeContent.ShowAction()],
       }
-      const rules = [exampleRule]
+      const rules = [checkYouTube]
       chrome.declarativeContent.onPageChanged.addRules(rules)
    })
 }
@@ -32,7 +32,6 @@ const updateBaseText = () => {
 
 chrome.runtime.onInstalled.addListener(() => {
    updateIcon()
-
    chrome.storage.sync.set(
       {
          badgeText: 'ON',
